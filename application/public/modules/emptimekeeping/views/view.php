@@ -16,7 +16,6 @@
 <div class="box mtop10">
 	<div class="box-header with-border">
 	  <div class="brc"><?=getLanguage('tim-thay');?> <span class="semi-bold viewtotal">0</span> <?=getLanguage('nhan-vien');?></div>
-
 	  <div class="box-tools pull-right">
 		   <ul class="button-group pull-right btnpermission">
 				<li id="search">

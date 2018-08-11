@@ -53,6 +53,8 @@ class Emptimekeeping extends CI_Controller {
         $this->site->render();
     }
 	function form(){
+		$data = new stdClass();
+        $result = new stdClass();
 		$login = $this->login;
 		$id = $this->input->post('id');
 		$find = $this->model->findID($id);
@@ -64,8 +66,14 @@ class Emptimekeeping extends CI_Controller {
 		$items = $this->model->table($tb['hre_employee'])->select('id,code,fullname')
 								 ->where('id',$employeeid)
 								 ->find();
-		$data = new stdClass();
-        $result = new stdClass();
+		$shift = $this->model->table($tb['hre_shift'])->where('isdefault',1)->find();
+		$data->time_stars = '00:00';
+		$data->time_ends = '00:00';
+		if(!empty($shift->time_star)){
+			$data->time_stars = $shift->time_star;
+			$data->time_ends = $shift->time_end;
+		}
+		$data->today = gmdate('m/d/Y', time() + 7 * 3600);
 		$data->finds = $find;  
 		if(!empty($items->id)){
 			$data->code = $items->code;  
@@ -163,7 +171,7 @@ class Emptimekeeping extends CI_Controller {
 
 			$i++;
 		}
-		$today = gmdate("ymdHis", time() + 7 * 3600);;
+		$today = gmdate("ymdHis", time() + 7 * 3600);
         $name = "NV_Dilam_".$today.".xlsx";
         $boderthin = "A1:H" .($i-1);
         $sheetIndex->getStyle($boderthin)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
@@ -187,7 +195,6 @@ class Emptimekeeping extends CI_Controller {
         $login = $this->login;
         $array['datecreate'] = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
         $array['usercreate'] = $login['userlogin'];
-        //$array['ipcreate'] = $this->base_model->getMacAddress();
 		
         $result['status'] = $this->model->saves($array,$id);
 		#region logfile

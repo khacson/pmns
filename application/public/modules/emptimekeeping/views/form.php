@@ -79,14 +79,17 @@
 		</div>
 	</div>
 </div>
-<?php
-	//print_r($finds);
-?>
 <script>
 	$(function(){
-		$('#datetimepicker2,#datetimepicker3').datetimepicker({
+		$('#datetimepicker2').datetimepicker({
+		    locale: 'en',
+			defaultDate: '<?=$today;?> <?=$time_stars;?>',
+			format: 'DD/MM/YYYY HH:mm',
+		});
+		$('#datetimepicker3').datetimepicker({
 		    locale: 'en',
 			format: 'DD/MM/YYYY HH:mm',
+			defaultDate: '<?=$today;?> <?=$time_ends;?>'
 		});
 		initForm();
 		handleSelect2();

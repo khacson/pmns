@@ -122,7 +122,6 @@ class EmptimekeepingModel extends CI_Model
 								 ->find_all();
 			foreach($query as $item){
 				$employeeid = $item->id;
-				
 				$arrInsert = array();
 				$arrInsert['datecreate'] = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
 				$arrInsert['usercreate'] = $search['usercreate'];
