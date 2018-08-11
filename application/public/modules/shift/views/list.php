@@ -14,6 +14,7 @@ foreach ($datas as $item){
 		<td class="time_star_pm text-center"><?=$item->time_star_pm;?></td>
 		<td class="time_end text-center"><?=$item->time_end;?></td>
 		<td class="time_end text-center"><?=($item->hours_1) + ($item->hours_2);?>h</td>
+		<td class="text-center"><input value="<?=$item->isdefault;?>" class="isdefault" id="<?=$item->id;?>" <?php if($item->isdefault == 1){?> checked <?php }?> type="checkbox" /></td>
 		<td class="text-center">
 			<?php if(isset($permission['edit'])){?>
 				<a id="<?=$id;?>" class="btn btn-info edititem" href="#" data-toggle="modal" data-target="#myModalFrom">

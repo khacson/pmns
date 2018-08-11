@@ -62,7 +62,7 @@
 		 <div id="cHeader">
 			<div id="tHeader">    	
 				<table width="100%" cellspacing="0" border="1" class="table ">
-					<?php for($i=1; $i< 11; $i++){?>
+					<?php for($i=1; $i< 12; $i++){?>
 						<col class="c<?=$i;?>">
 					<?php }?>
 					<tr>
@@ -74,6 +74,7 @@
 						<th><?=getLanguage('dau-giua-ca');?></th>
 						<th><?=getLanguage('cuoi-ca');?></th>
 						<th><?=getLanguage('thoi-gian-lam');?></th>
+						<th><?=getLanguage('mac-dinh');?></th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -85,7 +86,7 @@
 		<div id="data">
 			<div id="gridView">
 				<table id="group"  width="100%" cellspacing="0" border="1">
-					<?php for($i=1; $i< 11; $i++){?>
+					<?php for($i=1; $i< 12; $i++){?>
 						<col class="c<?=$i;?>">
 					<?php }?>
 					<tr class="row-searach">
@@ -94,6 +95,7 @@
 						<td>
 							<input type="text" name="shift_name" id="shift_name" class="searchs form-control tab-event" />
 						</td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -308,6 +310,20 @@
 				return false
 			});
 		});
+		$('.isdefault').each(function(e) {
+            $(this).click(function() {
+				$('.loading').show();
+                var id = $(this).attr('id');
+				var value = $(this).attr('value'); 
+                $.ajax({ 
+					url: controller + 'isdefault',
+					type: 'POST',
+					async: false,
+					data: {id:id, value:value},
+					success: function(datas) { $('.loading').hide();}
+				 });
+            });
+        });
 	}
 	function refresh(){
 		$(".loading").show();

@@ -184,4 +184,13 @@ class Shift extends CI_Controller {
 		#end
         echo json_encode($result);
     }
+	function isdefault(){
+		$tb = $this->base_model->loadTable();
+		$array = array();
+		$id = $this->input->post('id');
+		$value = $this->input->post('value');
+		$array['isdefault'] = $value * -1 + 1;
+		$this->model->table($tb['hre_shift'])->update(array('isdefault'=>0));	
+		$this->model->table($tb['hre_shift'])->save($id,$array);	
+	}
 }
