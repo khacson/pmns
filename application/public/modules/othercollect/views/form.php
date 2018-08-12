@@ -50,42 +50,6 @@
 	</div>
 	<div class="col-md-12 mtop10">
 		<div class="form-group">
-			<label class="control-label col-md-4"><?=getLanguage('dong-bao-hiem')?></label>
-			<div class="col-md-8">
-				<select id="input_isinsurrance" name="input_isinsurrance" class="form-input select2me form-control" >
-					<option value=""></option>
-					<option <?php if(0 == $finds->isinsurrance){?> selected <?php }?> value="0"><?=getLanguage('khong')?></option>
-					<option <?php if(1 == $finds->isinsurrance){?> selected <?php }?> value="1"><?=getLanguage('co')?></option>
-				</select>
-			</div>
-		</div>
-	</div>
-	<div class="col-md-12 mtop10">
-		<div class="form-group">
-			<label class="control-label col-md-4"><?=getLanguage('tinh-trang')?></label>
-			<div class="col-md-8">
-				<select id="input_statusid" name="input_statusid" class="form-input select2me form-control" data-placeholder="<?=getLanguage('chon-tinh-trang')?>">
-					<option value=""></option>
-					<option <?php if(1 == $finds->statusid){?> selected <?php }?> value="1"><?=getLanguage('chuyen-tien-rieng')?></option>
-					<option <?php if(2 == $finds->statusid){?> selected <?php }?> value="2"><?=getLanguage('cong-luong-thang')?></option>
-				</select>
-			</div>
-		</div>
-	</div>
-	<div class="col-md-12 mtop10">
-		<div class="form-group">
-			<label class="control-label col-md-4"><?=getLanguage('thanh-toan')?></label>
-			<div class="col-md-8">
-				<select id="input_ispay" name="input_ispay" class="form-input select2me form-control " >
-					<option value=""></option>
-					<option <?php if(0 == $finds->ispay){?> selected <?php }?> value="0"><?=getLanguage('chua-thanh-toan')?></option>
-					<option <?php if(1 == $finds->ispay){?> selected <?php }?> value="1"><?=getLanguage('da-thanh-toan')?></option>
-				</select>
-			</div>
-		</div>
-	</div>
-	<div class="col-md-12 mtop10">
-		<div class="form-group">
 			<label class="control-label col-md-4"><?=getLanguage('ghi-chu');?> </label>
 			<div class="col-md-8">
 				<input type="text" name="input_othercollect_content"  id="input_othercollect_content" class="form-input form-control tab-event" 
@@ -94,11 +58,7 @@
 			</div>
 		</div>
 	</div>
-	
 </div>
-<?php
-	//print_r($finds);
-?>
 <script>
 	$(function(){
 		formatNumber('fm-number');

@@ -7,7 +7,7 @@ if (!defined('BASEPATH'))
  * @copyright 2016
  */
 
-class Payroll extends CI_Controller {
+class Payrolldetail extends CI_Controller {
 	public $login;
     function __construct() {
         parent::__construct();

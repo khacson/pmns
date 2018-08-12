@@ -123,6 +123,14 @@
 					</button>
 				</li>
 				<?php }?>
+				<?php if(isset($permission['add'])){?>
+				<li id="updatepayroll">
+					<button class="button" >
+					<i class="fa fa-files-o"></i>
+					<?=getLanguage('chot-luong');?>
+					</button>
+				</li>
+				<?php }?>
 				<?php if(isset($permission['delete'])){?>
 				<li id="delete">
 					<button type="button" class="button">
@@ -151,7 +159,6 @@
 					<col class="caction">
 					<col class="caction">
 					<col class="caction">
-					<col class="caction">
 					<col class="cauto">
 					<tr>
 						<th><input type="checkbox" id="checkAll" autocomplete="off" /></th>
@@ -167,7 +174,6 @@
 						<th id=""><?=getLanguage('tong-cong');?></th>
 						<th><?=getLanguage('ngay-cong');?></th>
 						<th><?=getLanguage('thuc-lanh');?></th>
-						<th><?=getLanguage('loai-luong');?></th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -186,7 +192,6 @@
 					<?php foreach($allowances as $item){?>
 						<col class="ccallowances">
 					<?php }?>
-					<col class="caction">
 					<col class="caction">
 					<col class="caction">
 					<col class="caction">
@@ -304,7 +309,24 @@
 		$('#actionSave').click(function(){
 			save();
 		});
+		$('#updatepayroll').click(function(){
+			updatepayroll();
+		});
+		
 	});
+	function updatepayroll(){
+		var endoffmonthid = $('#endoffmonthid').val();
+		$.ajax({
+			url : controller + 'updatepayroll',
+			type: 'POST',
+			async: false,
+			data:{endoffmonthid:endoffmonthid},  
+			success:function(datas){
+				var obj = $.evalJSON(datas); 
+				
+			}
+		});
+	}
 	function loadForm(id){
 		$.ajax({
 			url : controller + 'form',
