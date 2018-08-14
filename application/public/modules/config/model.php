@@ -24,6 +24,7 @@ class ConfigModel extends CI_Model
     }
 	
 	function edits($array,$id){
+		$array['taxpersonal'] = fmNumberSave($array['taxpersonal']);
 		$this->model->table('hre_config')->where('id',$id)->update($array);	
 		return $id;
 		

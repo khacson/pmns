@@ -98,6 +98,16 @@
 		<div class="row mtop10">
 			<div class="col-md-6">
 				<div class="form-group">
+					<label class="control-label col-md-4"><?=getLanguage('muc-dong-thue-tncn');?></label>
+					<div class="col-md-8">
+						<input type="text" name="taxpersonal" placeholder="" id="taxpersonal" value="<?=$finds->taxpersonal;?>" class="searchs form-control form-input fm-number" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mtop10">
+			<div class="col-md-6">
+				<div class="form-group">
 					<div class="col-md-12">
 						<ul style="margin:0px; float:right;" class="button-group">
 							<li class=""><button id="edit" type="button" class="btnone"><i class="fa fa-save"></i> <?=getLanguage('update');?></button></li>
@@ -106,6 +116,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<div class="row mtop10"></div>
 	</div>
 </div>
@@ -125,6 +136,8 @@
 	var search;
 	var routes = '<?=$routes;?>';
 	$(function(){	
+		formatNumber('fm-number');
+		formatNumberKeyUp('fm-number');
 		handleSelect2();
 		init();
 		//refresh();
