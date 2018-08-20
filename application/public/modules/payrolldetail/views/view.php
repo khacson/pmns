@@ -1,17 +1,7 @@
 <style title="" type="text/css">
-	table col.c1 { width: 45px; }
-	table col.c2 { width: 45px; }
-	table col.c3 { width: 120px; }
-	table col.c4 { width: 100px; }
-	table col.c5 { width: 150px; }
-	table col.c6 { width: 100px; }
-	table col.c7 { width: 110px; }
-	table col.c8 { width: 110px; }
-	table col.ccallowances { width: 100px; }
-	table col.caction { width: 100px; }
-	table col.nc { width: 100px; }
-	table col.ltl { width: 100px; }
-	table col.cauto { width: auto;}
+	table td{
+		padding:6px 10px;
+	}
 </style>
 
 <div class="box">
@@ -20,8 +10,6 @@
 	  <div class="box-tools pull-right">
 		<button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Đóng">
 		  <i class="fa fa-minus"></i></button>
-		<!--<button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
-		  <i class="fa fa-times"></i></button>-->
 	  </div>
 	</div>
 	<div class="box-body">
@@ -61,8 +49,7 @@
 </div>
 <div class="box">
 	<div class="box-header with-border">
-	  <div class="brc"><?=getLanguage('tim-thay');?> <span class="semi-bold viewtotal">0</span> <?=getLanguage('nhan-vien');?></div>
-
+	  <div class="brc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 	  <div class="box-tools pull-right">
 		   <ul class="button-group pull-right btnpermission">
 				<li id="search">
@@ -73,116 +60,82 @@
 				</li>
 				<li id="refresh" >
 					<button class="button">
-						<i class="fa fa-refresh"></i>
-						<?=getLanguage('lam-moi');?>
+						<i class="fa fa-print"></i>
+						<?=getLanguage('print');?>
 					</button>
 				</li>
-				<?php if(isset($permission['add'])){?>
-				<li id="save" data-toggle="modal" data-target="#myModalFrom">
-					<button class="button" >
-					<i class="fa fa-plus"></i>
-					<?=getLanguage('them-moi');?>
-					</button>
-				</li>
-				<?php }?>
-				<?php if(isset($permission['edit'])){?>
-				<li id="edit" data-toggle="modal" data-target="#myModalFrom">
-					<button class="button">
-						<i class="fa fa-save"></i>
-						<?=getLanguage('sua');?>
-					</button>
-				</li>
-				<?php }?>
-				<?php if(isset($permission['add'])){?>
-				<li id="copy">
-					<button class="button" >
-					<i class="fa fa-files-o"></i>
-					<?=getLanguage('copy');?>
-					</button>
-				</li>
-				<?php }?>
-				<?php if(isset($permission['add'])){?>
-				<li id="updatepayroll">
-					<button class="button" >
-					<i class="fa fa-files-o"></i>
-					<?=getLanguage('chot-luong');?>
-					</button>
-				</li>
-				<?php }?>
-				<?php if(isset($permission['delete'])){?>
-				<li id="delete">
-					<button type="button" class="button">
-						<i class="fa fa-times"></i>
-						<?=getLanguage('xoa');?>
-					</button>
-				</li>
-				<?php }?>
-				
 			</ul>	
 	  </div>
 	</div>
 	<div class="box-body">
-	     <div id="gridview" >
-		 <!--header-->
-		 <div id="cHeader">
-			<div id="tHeader">    	
-				<table width="100%" cellspacing="0" border="1" class="table ">
-					<?php 
-					for($i=1; $i< 9; $i++){?>
-						<col class="c<?=$i;?>">
-					<?php }?>
-					<?php foreach($allowances as $item){?>
-						<col class="ccallowances">
-					<?php }?>
-					<col class="caction">
-					<col class="caction">
-					<col class="caction">
-					<col class="cauto">
+		<!--body-->
+		<div id="data" style="padding-left:15px; height:auto" class="row">
+			<div class="col-md-6" style="padding-right:0;">
+				<table width="100%" cellspacing="0" border="1">
 					<tr>
-						<th><input type="checkbox" id="checkAll" autocomplete="off" /></th>
-						<th><?=getLanguage('stt');?></th>
-						<th id="ord_d.departmanet_name"><?=getLanguage('phong-ban');?></th>
-						<th id="ord_e.code"><?=getLanguage('ma-nhan-vien');?></th>
-						<th id="ord_e.fullname"><?=getLanguage('ho-ten');?></th>
-						<th id="ord_e.endoffmonthid"><?=getLanguage('ky-luong');?></th>
-						<th id="ord_r.othercollect_money"><?=getLanguage('luong-co-ban');?></th>
-						<?php foreach($allowances as $item){?>
-						<th id=""><?=$item->allowance_name;?></th>
-						<?php }?>
-						<th id=""><?=getLanguage('tong-cong');?></th>
-						<th><?=getLanguage('ngay-cong');?></th>
-						<th><?=getLanguage('thuc-lanh');?></th>
-						<th></th>
-						<th></th>
+						<td>Lương cơ bản:</td>
+						<td></td>
+					</tr>
+					<?php foreach($allowances as $item){?>
+					<tr>
+						<td><?=$item->allowance_name;?>:</td>
+						<td></td>
+					</tr>
+					<?php }?>
+					<tr>
+						<td>Các khoản thu khác:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Các khoản nợ khác:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Lương:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Thực lãnh:</td>
+						<td></td>
 					</tr>
 				</table>
 			</div>
-		</div>
-		<!--end header-->
-		<!--body-->
-		<div id="data">
-			<div id="gridView">
-				<table id="group"  width="100%" cellspacing="0" border="1">
-					<?php 
-					for($i=1; $i< 9; $i++){?>
-						<col class="c<?=$i;?>">
+			<div class="col-md-6">
+				<table width="100%" cellspacing="0" border="1">
+					<?php foreach($insurance as $item){?>
+					<tr>
+						<td><?=$item->insurance_name;?>:</td>
+						<td></td>
+					</tr>
 					<?php }?>
-					<?php foreach($allowances as $item){?>
-						<col class="ccallowances">
-					<?php }?>
-					<col class="caction">
-					<col class="caction">
-					<col class="caction">
-					<col class="cauto">
-					<tbody id="grid-rows"></tbody>
+					<tr>
+						<td>Thuế thu nhập cá nhân:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Tổng ngày phép:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Số ngày phép đã sử dụng:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Số ngày phép còn lại:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Số lần đi trễ:</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Số lần về sớm:</td>
+						<td></td>
+					</tr>
 				</table>
-			</div>
+			</div>	
 		</div>
 		<!--end body-->
-	 </div>
-	 <div class="">
-		<div class="fleft" id="paging"></div>
-	 </div>
 	</div>
 </div>
 <!-- END grid-->
@@ -194,44 +147,6 @@
 	</div>
 </div> 
 <!-- ui-dialog -->
-<!--S Modal -->
-<div id="myModalFrom" class="modal fade" role="dialog">
-  <div class="modal-dialog" style="width:850px;">
-    <!-- Modal content-->
-    <div class="modal-content ">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="modalTitleFrom"></h4>
-      </div>
-      <div id="loadContentFrom" class="modal-body">
-      </div>
-      <div class="modal-footer">
-		 <button id="actionSave" type="button" class="btn btn-info" ><i class="fa fa-save" aria-hidden="true"></i>  <?=getLanguage('luu');?></button>
-        <button id="close" type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> <?=getLanguage('dong');?></button>
-      </div>
-    </div>
-  </div>
-</div>
-<!--E Modal -->
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h4 class="modal-title"><?=getLanguage('bang-luong-chi-tiet');?></h4>
-		</div>
-		<div id="loadContent" class="modal-body">
-		</div>
-		<div class="modal-footer">
-			<button id="printSalary" type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-print"></i> <?=getLanguage('in');?></button>			
-			<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> <?=getLanguage('dong');?></button>
-		</div>
-    </div>
-  </div>
-</div>
-<!--E Modal -->
 <input type="hidden" name="id" id="id" />
 <script>
 	var controller = '<?=base_url().$routes;?>/';
@@ -277,118 +192,14 @@
 			 var id = $("#id").val();
 			 if (e.which == 13) {
 				  if(id == ''){
-					  save('','save');
+					  searchList();
 				  }
 				  else{
-					  save(id,'edit');
+					  searchList();
 				  }
 			 }
 		});
-		$('#actionSave').click(function(){
-			save();
-		});
-		$('#updatepayroll').click(function(){
-			updatepayroll();
-		});
-		
 	});
-	function updatepayroll(){
-		var endoffmonthid = $('#endoffmonthid').val();
-		$.ajax({
-			url : controller + 'updatepayroll',
-			type: 'POST',
-			async: false,
-			data:{endoffmonthid:endoffmonthid},  
-			success:function(datas){
-				var obj = $.evalJSON(datas); 
-				
-			}
-		});
-	}
-	function loadForm(id){
-		$.ajax({
-			url : controller + 'form',
-			type: 'POST',
-			async: false,
-			data:{id:id},  
-			success:function(datas){
-				var obj = $.evalJSON(datas); 
-				$('#loadContentFrom').html(obj.content);
-				$('#modalTitleFrom').html(obj.title);
-				$('#input_reward_content').select();
-				$('#id').html(obj.id);
-			}
-		});
-	}
-	function save(id,func){
-		var id = $('#id').val(); 
-		var func = 'save';
-		if(id != ''){
-			func = 'edit';
-		}
-		
-		var search = getFormInput(); 
-		var obj = $.evalJSON(search); 
-		if(obj.employeeid == ""){
-			warning('<?=getLanguage('nhan-vien-khong-duoc-trong');?>'); 
-			return false;		
-		}
-		if(obj.salary == ""){
-			warning('<?=getLanguage('luong-co-ban-khong-duoc-trong');?>'); 
-			return false;		
-		}
-		var allowance = getAllowance();
-		$('.loading').show();
-		var data = new FormData();
-		//var objectfile2 = document.getElementById('profileAvatar').files;
-		//data.append('avatarfile', objectfile2[0]);
-		//data.append('csrf_stock_name', token);
-		data.append('search', search);
-		data.append('allowance', allowance);
-		data.append('id',id);
-		$.ajax({
-			url : controller + func,
-			type: 'POST',
-			async: false,
-			data:data,
-			enctype: 'multipart/form-data',
-			processData: false,  
-			contentType: false,   
-			success:function(datas){
-				var obj = $.evalJSON(datas); 
-				$('.loading').hide();
-				if(obj.status == 0){
-					if(id == ''){
-						error(tmktc); return false;	
-					}
-					else{
-						error(sktc); return false;	
-					}
-				}
-				else if(obj.status == -1){
-					error(dldtt); return false;		
-				}
-				else{
-					if(id == ''){
-						success(tmtc); 
-					}
-					else{
-						success(stc); 
-					}
-					refresh();
-				}
-			},
-			error : function(){
-				$('.loading').hide();
-				if(id == ''){
-					error(tmktc); return false;	
-				}
-				else{
-					error(sktc); return false;	
-				}
-			}
-		});
-	}
 	function init(){
 		$('#departmentid').multipleSelect({
 			filter: true,
@@ -438,10 +249,6 @@
 		getList(cpage,csrfHash);	
 	}
 	function searchList(){
-		$(".loading").show();
-		search = getSearch();
-		csrfHash = $('#token').val();
-		getList(cpage,csrfHash);	
+		$(".loading").hide();
 	}
-	
 </script>
