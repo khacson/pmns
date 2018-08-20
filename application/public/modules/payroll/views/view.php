@@ -115,16 +115,16 @@
 					</button>
 				</li>
 				<?php }?>
-				<?php if(isset($permission['add'])){?>
-				<li id="copy">
+				<?php if(isset($permission['copy'])){?>
+				<li id="copy" data-toggle="modal" data-target="#myModalCopy">
 					<button class="button" >
 					<i class="fa fa-files-o"></i>
 					<?=getLanguage('copy');?>
 					</button>
 				</li>
 				<?php }?>
-				<?php if(isset($permission['add'])){?>
-				<li id="updatepayroll">
+				<?php if(isset($permission['add'])){?> 
+				<li data-toggle="modal" data-target="#myModalPayRoll">
 					<button class="button" >
 					<i class="fa fa-files-o"></i>
 					<?=getLanguage('chot-luong');?>
@@ -254,6 +254,87 @@
   </div>
 </div>
 <!--E Modal -->
+<!--Copy Modal -->
+<div id="myModalCopy" class="modal fade" role="dialog">
+  <div class="modal-dialog w600">
+    <!-- Modal content-->
+    <div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title"><?=getLanguage('copy-luong');?></h4>
+		</div>
+		<div id="loadContentCopy" class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label col-md-4"><?=getLanguage('tu-ky-luong')?> (<span class="red">*</span>)</label>
+						<div class="col-md-8">
+							<select id="frommonth" name="frommonth" class="combos" >
+								<option value=""></option>
+								<?php $i=1; foreach($endoffmonths as $item){?>
+								<option <?php if($i==2){?> selected <?php }?> value="<?=$item->id;?>"><?=$item->monthyear;?></option>
+								<?php $i++;}?>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 mtop10">
+					<div class="form-group">
+						<label class="control-label col-md-4"><?=getLanguage('toi-ky-luong')?> (<span class="red">*</span>)</label>
+						<div class="col-md-8">
+							<select id="tomonth" name="tomonth" class="combos" >
+								<option value=""></option>
+								<?php $i=1; foreach($endoffmonths as $item){?>
+								<option <?php if($i==1){?> selected <?php }?> value="<?=$item->id;?>"><?=$item->monthyear;?></option>
+								<?php $i++;}?>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button id="copySalary" type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-copy"></i> <?=getLanguage('save');?></button>			
+			<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> <?=getLanguage('dong');?></button>
+		</div>
+    </div>
+  </div>
+</div>
+<!--E Copy Modal -->
+<!--Copy Modal -->
+<div id="myModalPayRoll" class="modal fade" role="dialog">
+  <div class="modal-dialog w600">
+    <!-- Modal content-->
+    <div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title"><?=getLanguage('chot-luong');?></h4>
+		</div>
+		<div id="loadContentPayRoll" class="modal-body">
+			<div class="row">
+				<div class="col-md-12 mtop10">
+					<div class="form-group">
+						<label class="control-label col-md-4"><?=getLanguage('ky-luong')?> (<span class="red">*</span>)</label>
+						<div class="col-md-8">
+							<select id="salarymonth" name="salarymonth" class="combos" >
+								<option value=""></option>
+								<?php $i=1; foreach($endoffmonths as $item){?>
+								<option <?php if($i==1){?> selected <?php }?> value="<?=$item->id;?>"><?=$item->monthyear;?></option>
+								<?php $i++;}?>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button id="updatepayroll" type="button" class="btn btn-info" data-dismiss="modal"><i class="fa fa-copy"></i> <?=getLanguage('save');?></button>			
+			<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> <?=getLanguage('dong');?></button>
+		</div>
+    </div>
+  </div>
+</div>
+<!--E Copy Modal -->
 <input type="hidden" name="id" id="id" />
 <script>
 	var controller = '<?=base_url().$routes;?>/';
@@ -261,6 +342,7 @@
 	var cpage = 0;
 	var search;
 	var routes = '<?=$routes;?>';
+	var copyFailed = "<?=getLanguage('copy-khong-thanh-cong');?>";
 	$(function(){	
 		init();
 		//refresh();
@@ -312,16 +394,48 @@
 		$('#updatepayroll').click(function(){
 			updatepayroll();
 		});
-		
+		$('#copySalary').click(function(){
+			copySalary();
+		});
 	});
+	function copySalary(){
+		var frommonth = getCombo('frommonth');
+		var tomonth = getCombo('tomonth');
+		if(frommonth == ''){
+			return;
+		}
+		if(tomonth == ''){
+			return;
+		}
+		$(".loading").show();
+		$.ajax({
+			url : controller + 'copySalary',
+			type: 'POST',
+			async: false,
+			data:{frommonth:frommonth, tomonth:tomonth},  
+			success:function(datas){
+				var obj = $.evalJSON(datas); 
+				$(".loading").hide();
+				if(obj.status == 1){
+					searchList();
+					success(obj.msg);
+				}
+				else{
+					error(copyFailed);
+				}
+			}
+		});
+	}
 	function updatepayroll(){
-		var endoffmonthid = $('#endoffmonthid').val();
+		var salarymonth = $('#salarymonth').val();
+		$(".loading").show();
 		$.ajax({
 			url : controller + 'updatepayroll',
 			type: 'POST',
 			async: false,
-			data:{endoffmonthid:endoffmonthid},  
+			data:{endoffmonthid:salarymonth},  
 			success:function(datas){
+				$(".loading").hide();
 				var obj = $.evalJSON(datas); 
 				
 			}
@@ -422,7 +536,21 @@
 			placeholder:'<?=getLanguage('chon-ky-luong')?>',
 			single: true
 		});
-		
+		$('#frommonth').multipleSelect({
+			filter: true,
+			placeholder:'<?=getLanguage('chon-ky-luong')?>',
+			single: true
+		});
+		$('#tomonth').multipleSelect({
+			filter: true,
+			placeholder:'<?=getLanguage('chon-ky-luong')?>',
+			single: true
+		});
+		$('#salarymonth').multipleSelect({
+			filter: true,
+			placeholder:'<?=getLanguage('chon-ky-luong')?>',
+			single: true
+		});
 	}
 	function funcList(obj){
 		$(".edit").each(function(e){

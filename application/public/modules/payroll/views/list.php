@@ -2,10 +2,7 @@
 <?php 	$i = $start;
 foreach ($datas as $item){ 
 	$id = $item->id;	
-	$salary_status = getLanguage('net');
-	if($item->salary_status == 2){
-		$salary_status = getLanguage('gross');
-	}
+	$salary_status = '';
 	$workday = 0;
 	if(!empty($timeSheet[$item->employeeid])){
 		$workday = $timeSheet[$item->employeeid];

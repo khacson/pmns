@@ -188,7 +188,113 @@ class Payroll extends CI_Controller {
         echo json_encode($result);
     }
 	function updatepayroll(){
+		$endoffmonthid = $this->input->post('endoffmonthid');
+		$tb = $this->base_model->loadTable();
+		$login = $this->login;
+		$branchid = $login['branchid'];
+		$date = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
+		//Chot cong
+		$timesheets = $this->model->table($tb['hre_timesheets_month'])
+						   ->select('id,employeeid,workday')
+					       ->where('branchid',$branchid)
+					       ->where('monthid',$endoffmonthid)
+					       ->find_all();
+		$return = new stdClass();
+		if(count($timesheets) == 0){
+			$return->status = 0;
+			$return->msg = getLanguage('chua-chot-cong');
+			echo json_encode($return); exit;
+		}
+		$arrTimeSheet = array();
+		foreach($timesheets as $item){
+			$arrTimeSheet[$item->employeeid] = $item->workday;
+		}
+		//Lấy lương cơ bản
+		$luongCoBan = $this->model->table($tb['hre_salary'])
+						   ->select('employeeid,salary, isinsurance')
+						   ->where('endoffmonthid',$endoffmonthid)
+						   ->where('branchid',$branchid)
+						   ->where('isdelete',0)
+						   ->find_all;
+		//Các khoản phụ cấp
+		$cacKhoanPhuCap = $this->model->table($tb['hre_salary_allowance'])
+						   ->select('allowanceid,employeeid,endoffmonthid,salary,typeid,isinsurance,istax')
+						   ->where('endoffmonthid',$endoffmonthid)
+						   ->where('branchid',$branchid)
+						   ->where('isdelete',0)
+						   ->find_all;
+		$arrPhuCap = array();
+		foreach($cacKhoanPhuCap as $item){
+			$arrPhuCap[$item->employeeid] = $item;
+		}
+		//Các khoản đóng bảo hiểm
+		$cacKhoanBaoHiem = $this->model->table($tb['hre_insurance'])
+						   ->select('insurance_name,company,workers,insurance_type,id')
+						   ->where('isdelete',0)
+						   ->find_all;
+		//Tính tổng tiền lương
+		foreach($luongCoBan as $item){
+			$luong_co_ban = $item->salary;
+			
+		}		
+	}
+	function copySalary(){
+		$tb = $this->base_model->loadTable();
+		$login = $this->login;
+		$branchid = $login['branchid'];
+		$frommonth = $this->input->post('frommonth');
+		$tomonth = $this->input->post('tomonth');
+		$date = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
 		
+		$luongCoBan = $this->model->table($tb['hre_salary'])
+						   ->select('employeeid,salary, isinsurance')
+						   ->where('endoffmonthid',$frommonth)
+						   ->where('branchid',$branchid)
+						   ->where('isdelete',0)
+						   ->find_all();
+		$cacKhoanPhuCap = $this->model->table($tb['hre_salary_allowance'])
+						   ->select('allowanceid,employeeid,endoffmonthid,salary,typeid,isinsurance,istax')
+						   ->where('endoffmonthid',$frommonth)
+						   ->where('branchid',$branchid)
+						   ->where('isdelete',0)
+						   ->find_all();
+		
+		$this->model->table($tb['hre_salary'])->where('endoffmonthid',$tomonth)->delete();
+		$this->model->table($tb['hre_salary_allowance'])->where('endoffmonthid',$tomonth)->delete();
+		$return = new stdClass();
+		if(count($luongCoBan) == 0){
+			$return->status = 0;
+			$return->msg = '';
+			echo json_encode($return); exit;
+		}
+		foreach($luongCoBan as $item){
+			$insert = array();
+			$insert['endoffmonthid'] = $tomonth; 
+			$insert['employeeid'] = $item->employeeid;
+			$insert['branchid'] = $branchid;
+			$insert['salary'] = $item->salary;
+			$insert['isinsurance'] = $item->isinsurance;
+			$insert['datecreate'] = $date;
+			$insert['usercreate'] = $login['username'];
+			$this->model->table($tb['hre_salary'])->insert($insert);
+		}
+		foreach($cacKhoanPhuCap as $item){
+			$insert = array();
+			$insert['allowanceid'] = $item->allowanceid;
+			$insert['endoffmonthid'] = $tomonth; 
+			$insert['employeeid'] = $item->employeeid;
+			$insert['branchid'] = $branchid;
+			$insert['salary'] = $item->salary;
+			$insert['isinsurance'] = $item->isinsurance;
+			$insert['typeid'] = $item->typeid;
+			$insert['istax'] = $item->istax;
+			$insert['datecreate'] = $date;
+			$insert['usercreate'] = $login['username'];
+			$this->model->table($tb['hre_salary_allowance'])->insert($insert);
+		}
+		$return->status = 1;
+		$return->msg = getLanguage('copy-thanh-cong');;
+		echo json_encode($return); exit;
 	}
     function deletes() {
         $token = $this->security->get_csrf_hash();
