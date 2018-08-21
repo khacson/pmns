@@ -19,7 +19,7 @@ class InsuranceModel extends CI_Model
 	function getTypes() {
         $query = array();
 		$query[1] = '%';
-		$query[2] = 'Tiền';
+		//$query[2] = 'Tiền';
         return $query;
     }
 	function getSearch($search){

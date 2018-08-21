@@ -6,7 +6,6 @@ if (!defined('BASEPATH'))
  * @author sonnk
  * @copyright 2016
  */
-
 class Othercollect extends CI_Controller {
 	var $login;
     function __construct() {
@@ -59,7 +58,7 @@ class Othercollect extends CI_Controller {
 		$find = $this->model->findID($id);
 		$tb = $this->base_model->loadTable();
 		if(empty($find->id)){
-			$find = $this->base_model->getColumns($tb['hre_othercollect']);
+			$find = $this->base_model->getColumns($tb['hre_salary_othercollect']);
 		}
 		$data = new stdClass();
         $result = new stdClass();

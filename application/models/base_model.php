@@ -51,8 +51,8 @@ class base_model extends CI_Model {
 		$arrTable['hre_machine_fingerprint'] = 'hre_machine_fingerprint_'.$companyid;
 		$arrTable['hre_maternityleave'] = 'hre_maternityleave_'.$companyid;
 		$arrTable['hre_mission'] = 'hre_mission_'.$companyid;
-		$arrTable['hre_othercollect'] = 'hre_othercollect_'.$companyid;
-		$arrTable['hre_otherdebt'] = 'hre_otherdebt_'.$companyid;
+		$arrTable['hre_salary_othercollect'] = 'hre_salary_othercollect_'.$companyid;
+		$arrTable['hre_salary_otherdebt'] = 'hre_salary_otherdebt_'.$companyid;
 		$arrTable['hre_overtime_pay'] = 'hre_overtime_pay_'.$companyid;
 		$arrTable['hre_position'] = 'hre_position_'.$companyid;
 		$arrTable['hre_province'] = 'hre_province_'.$companyid;
@@ -76,6 +76,8 @@ class base_model extends CI_Model {
 		$arrTable['hre_interviewschedule'] = 'hre_interviewschedule_'.$companyid;
 		$arrTable['hre_discipline'] = 'hre_discipline_'.$companyid;
 		$arrTable['hre_timesheets_month'] = 'hre_timesheets_month_'.$companyid;
+		$arrTable['hre_taxpersonal'] = 'hre_taxpersonal_'.$companyid;
+		$arrTable['hre_salary_public'] = 'hre_salary_public_'.$companyid;
 		return $arrTable;
 	}
 	function getListTable($fromdate,$todate){

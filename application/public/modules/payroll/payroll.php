@@ -188,6 +188,8 @@ class Payroll extends CI_Controller {
         echo json_encode($result);
     }
 	function updatepayroll(){
+		set_time_limit(30);
+		$this->db->trans_start();
 		$endoffmonthid = $this->input->post('endoffmonthid');
 		$tb = $this->base_model->loadTable();
 		$login = $this->login;
@@ -218,25 +220,67 @@ class Payroll extends CI_Controller {
 						   ->find_all;
 		//Các khoản phụ cấp
 		$cacKhoanPhuCap = $this->model->table($tb['hre_salary_allowance'])
-						   ->select('allowanceid,employeeid,endoffmonthid,salary,typeid,isinsurance,istax')
+						   ->select('id,allowanceid,employeeid,endoffmonthid,salary,typeid,isinsurance,istax')
 						   ->where('endoffmonthid',$endoffmonthid)
 						   ->where('branchid',$branchid)
 						   ->where('isdelete',0)
 						   ->find_all;
 		$arrPhuCap = array();
 		foreach($cacKhoanPhuCap as $item){
-			$arrPhuCap[$item->employeeid] = $item;
+			$arrPhuCap[$item->employeeid][$item->id] = $item;
 		}
 		//Các khoản đóng bảo hiểm
 		$cacKhoanBaoHiem = $this->model->table($tb['hre_insurance'])
 						   ->select('insurance_name,company,workers,insurance_type,id')
 						   ->where('isdelete',0)
 						   ->find_all;
+		//Các khoản cộng trong tháng
+		$congTrongThang = $this->model->table($tb['hre_insurance'])
+						   ->select('insurance_name,company,workers,insurance_type,id')
+						   ->where('isdelete',0)
+						   ->find_all;
+		//Các khỏa trừ trong tháng
+		
+		
 		//Tính tổng tiền lương
 		foreach($luongCoBan as $item){
 			$luong_co_ban = $item->salary;
+			//Các Khoản phu cấp
+			$tongTienPhuCap = 0;
+			if(isset($arrPhuCap[$item->employeeid])){
+				foreach($arrPhuCap[$item->employeeid] as $items){
+					$tienPhuCap = $items->salary;
+					$tongTienPhuCap+= $tienPhuCap;
+				}
+			}
+			//Ngay cong
+			$ngayCongNhanVien = 0;
+			if(isset($arrTimeSheet[$item->employeeid])){
+				$ngayCongNhanVien = $arrTimeSheet[$item->employeeid];
+			}
+			//Tổng tiền lương
+			if(empty($ngayCongNhanVien)){
+				$tongTienLuong = 0;
+			}
+			else{
+				$tongTienLuong = $tongTienPhuCap + $luong_co_ban;
+			}
 			
-		}		
+			//Tính các khoản bảo hiểm kinh phí công đoàn
+		}	
+		$this->db->trans_complete(); 
+		if ($this->db->trans_status() === FALSE) {
+			$this->db->trans_rollback();
+			$return->status = 0;
+			$return->msg = getLanguage('chot-luong-khong-thanh-cong');
+			echo json_encode($return); exit;
+		} 
+		else {
+			$this->db->trans_commit();
+			$return->status = 1;
+			$return->msg = getLanguage('chot-luong-thanh-cong');
+			echo json_encode($return); exit;
+		}	
 	}
 	function copySalary(){
 		$tb = $this->base_model->loadTable();

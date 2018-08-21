@@ -339,6 +339,7 @@
 				searchList();
 			}
 		});
+		$(".searchs").val("");
 	}
 	function funcList(obj){
 		$(".edit").each(function(e){
@@ -372,8 +373,8 @@
 		$(".searchs").val("");
 		$('#departmentid').multipleSelect('uncheckAll');
 		csrfHash = $('#token').val();
-		$('#fromdate').val('<?=$fromdate;?>');
-		$('#todate').val('<?=$todate;?>');
+		//$('#fromdate').val('<?=$fromdate;?>');
+		//$('#todate').val('<?=$todate;?>');
 		search = getSearch();
 		getList(cpage,csrfHash);	
 	}

@@ -30,7 +30,7 @@ class EndoffmonthModel extends CI_Model
 				FROM `".$tb['hre_endoffmonth']."` AS u
 				WHERE u.isdelete = 0 
 				$searchs
-				ORDER BY u.monthyear ASC 
+				ORDER BY u.date_end DESC 
 				";
 		$sql.= ' limit '.$page.','.$rows;
 		$query = $this->model->query($sql)->execute();

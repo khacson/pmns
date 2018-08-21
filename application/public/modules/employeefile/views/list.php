@@ -776,6 +776,50 @@
 		<div class="row mtop10"></div>
 	</div>
 </div>
+<!--E Thong tin nguoi phu thuoc-->
+<div class="box">
+	<div class="box-header with-border">
+	  <i class="fa fa-users"></i> <?=getLanguage('thong-tin-nguoi-phu-thuoc');?> 
+	  <div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool">
+			<a href="#"><div class="fright cursor" id="addnguoiphuthuoc" style="padding-left:20px;"><i class="fa fa-plus cursor"></i></div></a>
+		 
+		 </button>
+	  </div>
+	</div>
+	<div class="box-body">
+	    <div class="row mtop10">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label col-md-4" style="padding-right:0;"><?=getLanguage('ho-ten')?> </label>
+					<div class="col-md-8">
+						<input maxlength="150" type="text" placeholder="" class="form-control" required value="" />
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label col-md-4"><?=getLanguage('nam-sinh')?></label>
+					<div class="col-md-8">
+						<input maxlength="150" type="text" placeholder="" class="form-control" required  value=""/>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label col-md-4"><?=getLanguage('quan-he')?></label>
+					<div class="col-md-7">
+						<input maxlength="150" type="text" placeholder="" class="form-control" required  value=""/>
+					</div>
+					<div class="col-md-1">
+						<i class="fa fa-times cursor delete_noilamviec mright5 fright mtop5 red"></i> 
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mtop10"></div>
+	</div>
+</div>
 <!--E Thong tin cong viec-->
 <div class="box">
 	<div class="box-header with-border">

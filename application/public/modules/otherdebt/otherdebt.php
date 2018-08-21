@@ -59,7 +59,7 @@ class Otherdebt extends CI_Controller {
 		$find = $this->model->findID($id);
 		$tb = $this->base_model->loadTable();
 		if(empty($find->id)){
-			$find = $this->base_model->getColumns($tb['hre_otherdebt']);
+			$find = $this->base_model->getColumns($tb['hre_salary_otherdebt']);
 		}
 		$data = new stdClass();
         $result = new stdClass();

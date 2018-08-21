@@ -177,6 +177,10 @@
 	var cpage = 0;
 	var search;
 	var routes = '<?=$routes;?>';
+	var nvkdt = '<?=getLanguage('nhan-vien-khong-duoc-trong');?>';
+	var stkdt = '<?=getLanguage('so-tien-khong-duoc-trong');?>';
+	var cpb = '<?=getLanguage('chon-phong-ban')?>';
+	
 	$(function(){
 		$('#datecreate').daterangepicker({
 			 locale: {
@@ -185,7 +189,7 @@
 			timePicker: false,
         	timePickerIncrement: 8,
         	showDropdowns: true,
-			startDate: moment().subtract('days', 7),
+			startDate: moment().subtract('days', 30),
 			endDate: moment()
 		});
 		$('.datecreateClick').click(function(){
@@ -269,15 +273,14 @@
 		if(id != ''){
 			func = 'edit';
 		}
-		
 		var search = getFormInput(); 
 		var obj = $.evalJSON(search); 
 		if(obj.employeeid == ""){
-			warning('<?=getLanguage('nhan-vien-khong-duoc-trong');?>'); 
+			warning(nvkdt); 
 			return false;		
 		}
 		if(obj.othercollect_money == ""){
-			warning('<?=getLanguage('so-tien-khong-duoc-trong');?>'); 
+			warning(stkdt); 
 			return false;		
 		}
 		$('.loading').show();
@@ -333,12 +336,13 @@
 	function init(){
 		$('#departmentid').multipleSelect({
 			filter: true,
-			placeholder:'<?=getLanguage('chon-phong-ban')?>',
+			placeholder:cpb,
 			single: false,
 			onClick: function(view){
 				searchList();
 			}
 		});
+		$(".searchs").val("");
 	}
 	function funcList(obj){
 		$(".edit").each(function(e){
@@ -372,8 +376,8 @@
 		$(".searchs").val("");
 		$('#departmentid').multipleSelect('uncheckAll');
 		csrfHash = $('#token').val();
-		$('#fromdate').val('<?=$fromdate;?>');
-		$('#todate').val('<?=$todate;?>');
+		//$('#fromdate').val('<?=$fromdate;?>');
+		//$('#todate').val('<?=$todate;?>');
 		search = getSearch();
 		getList(cpage,csrfHash);	
 	}

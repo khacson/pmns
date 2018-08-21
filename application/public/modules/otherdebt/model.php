@@ -10,7 +10,7 @@ class OtherdebtModel extends CI_Model
 	}
 	function findID($id) {
 		$tb = $this->base_model->loadTable();
-        $query = $this->model->table($tb['hre_otherdebt'])
+        $query = $this->model->table($tb['hre_salary_otherdebt'])
 					  ->where('isdelete',0)
 					  ->where('id',$id)
 					  ->find();
@@ -77,7 +77,7 @@ class OtherdebtModel extends CI_Model
 		$tb = $this->base_model->loadTable();
 		$searchs = $this->getSearch($search);
 		$sql = " SELECT r.*, e.fullname, e.code, d.departmanet_name
-				FROM `".$tb['hre_otherdebt']."` AS r
+				FROM `".$tb['hre_salary_otherdebt']."` AS r
 				LEFT JOIN `".$tb['hre_employee']."` e on e.id = r.employeeid
 				left join `".$tb['hre_department']."` d on d.id = r.departmentid
 				WHERE r.isdelete = 0 
@@ -102,7 +102,7 @@ class OtherdebtModel extends CI_Model
 		$searchs = $this->getSearch($search);
 		$sql = " 
 		SELECT count(1) total  
-			FROM `".$tb['hre_otherdebt']."` AS r
+			FROM `".$tb['hre_salary_otherdebt']."` AS r
 			LEFT JOIN `".$tb['hre_employee']."` e on e.id = r.employeeid
 			left join `".$tb['hre_department']."` d on d.id = r.departmentid
 			WHERE r.isdelete = 0
@@ -137,7 +137,7 @@ class OtherdebtModel extends CI_Model
 		 $array['departmentid'] =  $this->findDepartment($array['employeeid']);
 		 $array['branchid'] = $login['branchid'];
 		 $array['otherdebt_money'] =  fmNumberSave($array['otherdebt_money']);
-		 $result = $this->model->table($tb['hre_otherdebt'])->insert($array);	
+		 $result = $this->model->table($tb['hre_salary_otherdebt'])->insert($array);	
 		 return $result;
 	}
 	function edits($array,$id){
@@ -152,7 +152,7 @@ class OtherdebtModel extends CI_Model
 		$array['departmentid'] =  $this->findDepartment($array['employeeid']);
 		$array['branchid'] = $login['branchid'];
 		$array['otherdebt_money'] =  fmNumberSave($array['otherdebt_money']);
-		$this->model->table($tb['hre_otherdebt'])
+		$this->model->table($tb['hre_salary_otherdebt'])
 					->where('id',$id)
 					->update($array);	
 		return $id;
@@ -160,7 +160,7 @@ class OtherdebtModel extends CI_Model
 	}
 	function deletes($id,$array){
 		$tb = $this->base_model->loadTable();
-		$this->model->table($tb['hre_otherdebt'])
+		$this->model->table($tb['hre_salary_otherdebt'])
 					->where("id in ($id)")
 					->update($array);
 		return 1;
