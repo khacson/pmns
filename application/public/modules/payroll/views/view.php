@@ -343,6 +343,8 @@
 	var search;
 	var routes = '<?=$routes;?>';
 	var copyFailed = "<?=getLanguage('copy-khong-thanh-cong');?>";
+	var cpb = "<?=getLanguage('chon-phong-ban');?>";
+	var ckl = "<?=getLanguage('chon-ky-luong');?>";
 	$(function(){	
 		init();
 		//refresh();
@@ -437,7 +439,12 @@
 			success:function(datas){
 				$(".loading").hide();
 				var obj = $.evalJSON(datas); 
-				
+				if(obj.status == 0){
+					error(obj.msg);
+				}
+				else{
+					success(obj.msg);
+				}				
 			}
 		});
 	}
@@ -528,27 +535,27 @@
 	function init(){
 		$('#departmentid').multipleSelect({
 			filter: true,
-			placeholder:'<?=getLanguage('chon-phong-ban')?>',
+			placeholder:cpb,
 			single: false
 		});
 		$('#endoffmonthid').multipleSelect({
 			filter: true,
-			placeholder:'<?=getLanguage('chon-ky-luong')?>',
+			placeholder:ckl,
 			single: true
 		});
 		$('#frommonth').multipleSelect({
 			filter: true,
-			placeholder:'<?=getLanguage('chon-ky-luong')?>',
+			placeholder:ckl,
 			single: true
 		});
 		$('#tomonth').multipleSelect({
 			filter: true,
-			placeholder:'<?=getLanguage('chon-ky-luong')?>',
+			placeholder:ckl,
 			single: true
 		});
 		$('#salarymonth').multipleSelect({
 			filter: true,
-			placeholder:'<?=getLanguage('chon-ky-luong')?>',
+			placeholder:ckl,
 			single: true
 		});
 	}

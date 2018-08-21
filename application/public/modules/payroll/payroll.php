@@ -194,6 +194,7 @@ class Payroll extends CI_Controller {
 		$tb = $this->base_model->loadTable();
 		$login = $this->login;
 		$branchid = $login['branchid'];
+		$username = $login['username'];
 		$date = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
 		//Chot cong
 		$timesheets = $this->model->table($tb['hre_timesheets_month'])
@@ -211,20 +212,37 @@ class Payroll extends CI_Controller {
 		foreach($timesheets as $item){
 			$arrTimeSheet[$item->employeeid] = $item->workday;
 		}
+		//Kỳ lương
+		$kyLuong = $this->model->table($tb['hre_endoffmonth'])
+						   ->select('id,date_start,date_end,number_days')
+					       ->where('id',$endoffmonthid)
+					       ->find();
+		if(empty($kyLuong->id)){
+			$return->status = 0;
+			$return->msg = getLanguage('chua-tao-ky-luong');
+			echo json_encode($return); exit;
+		}
+		$date_start = $kyLuong->date_start;	  
+		$date_end = $kyLuong->date_end;		
+		$number_days = $kyLuong->number_days;
+		#region Xoa du lieu cu - Tien luong
+		$this->model->table($tb['hre_salary_public'])->where('endoffmonthid',$endoffmonthid)->delete();
+		$this->model->table($tb['hre_salary_insurance'])->where('endoffmonthid',$endoffmonthid)->delete();
+		#end
 		//Lấy lương cơ bản
 		$luongCoBan = $this->model->table($tb['hre_salary'])
 						   ->select('employeeid,salary, isinsurance')
 						   ->where('endoffmonthid',$endoffmonthid)
 						   ->where('branchid',$branchid)
 						   ->where('isdelete',0)
-						   ->find_all;
+						   ->find_all();
 		//Các khoản phụ cấp
 		$cacKhoanPhuCap = $this->model->table($tb['hre_salary_allowance'])
 						   ->select('id,allowanceid,employeeid,endoffmonthid,salary,typeid,isinsurance,istax')
 						   ->where('endoffmonthid',$endoffmonthid)
 						   ->where('branchid',$branchid)
 						   ->where('isdelete',0)
-						   ->find_all;
+						   ->find_all();
 		$arrPhuCap = array();
 		foreach($cacKhoanPhuCap as $item){
 			$arrPhuCap[$item->employeeid][$item->id] = $item;
@@ -233,15 +251,31 @@ class Payroll extends CI_Controller {
 		$cacKhoanBaoHiem = $this->model->table($tb['hre_insurance'])
 						   ->select('insurance_name,company,workers,insurance_type,id')
 						   ->where('isdelete',0)
-						   ->find_all;
+						   ->find_all();
 		//Các khoản cộng trong tháng
-		$congTrongThang = $this->model->table($tb['hre_insurance'])
-						   ->select('insurance_name,company,workers,insurance_type,id')
+		$congTrongThang = $this->model->table($tb['hre_salary_othercollect'])
+						   ->select('sum(othercollect_money) as othercollect_money, employeeid')
 						   ->where('isdelete',0)
-						   ->find_all;
-		//Các khỏa trừ trong tháng
-		
-		
+						   ->where('othercollect_date >= ',$date_start)
+						   ->where('othercollect_date <=',$date_end)
+						   ->group_by('employeeid')
+						   ->find_all();
+		$arrCongTrongThang = array();
+		foreach($congTrongThang as $item){
+			$arrCongTrongThang[$item->employeeid] = $item->othercollect_money;
+		}
+		//Các khỏan trừ trong tháng
+		$truTrongThang = $this->model->table($tb['hre_salary_otherdebt'])
+						   ->select('sum(otherdebt_money) as otherdebt_money, employeeid')
+						   ->where('isdelete',0)
+						   ->where('otherdebt_date >= ',$date_start)
+						   ->where('otherdebt_date <=',$date_end)
+						   ->group_by('employeeid')
+						   ->find_all();
+		$arrTruTrongThang = array();
+		foreach($truTrongThang as $item){
+			$arrTruTrongThang[$item->employeeid] = $item->otherdebt_money;
+		}
 		//Tính tổng tiền lương
 		foreach($luongCoBan as $item){
 			$luong_co_ban = $item->salary;
@@ -263,10 +297,50 @@ class Payroll extends CI_Controller {
 				$tongTienLuong = 0;
 			}
 			else{
-				$tongTienLuong = $tongTienPhuCap + $luong_co_ban;
+				$tongTienLuong = ($tongTienPhuCap + $luong_co_ban);
+				if($number_days > $ngayCongNhanVien){
+					$tienLuongMotNgay = $tongTienLuong/$number_days;
+					$tongTienLuong = round($tienLuongMotNgay * $ngayCongNhanVien);
+				}
 			}
-			
+			//Các khoản cộng trong tháng
+			$tienCongTrongThang = 0;
+			if(isset($arrCongTrongThang[$item->employeeid])){
+				$tienCongTrongThang = $arrCongTrongThang[$item->employeeid];
+			}
+			//Tiền lương sau khi cộng
+			$tienLuongSauKhiCong = $tongTienLuong + $tienCongTrongThang;
+			//
 			//Tính các khoản bảo hiểm kinh phí công đoàn
+			$tt_workers = 0;
+			foreach($cacKhoanBaoHiem as $item2){
+				$company = $item2->company;
+				$workers = $item2->workers;
+				$t_company = ($tienLuongSauKhiCong * $company)/ 100;
+				$t_workers = ($tienLuongSauKhiCong * $workers)/ 100;
+				$tt_workers+= $t_workers;
+				//Inser Bao bien cong doang
+				$insertLuongBaoHiem = array();
+				$insertLuongBaoHiem['endoffmonthid'] = $endoffmonthid;
+				$insertLuongBaoHiem['employeeid'] = $item->employeeid;
+				$insertLuongBaoHiem['branchid'] = $branchid;
+				$insertLuongBaoHiem['company'] = round($t_company);
+				$insertLuongBaoHiem['worker'] = round($t_workers);
+				$insertLuongBaoHiem['insuranceid'] = $item2->id;
+				$insertLuongBaoHiem['datecreate'] = $date;
+				$insertLuongBaoHiem['usercreate'] = $username;
+				$this->model->table($tb['hre_salary_insurance'])->insert($insertLuongBaoHiem);
+			}
+			$insertLuong = array();
+			$insertLuong['endoffmonthid'] = $endoffmonthid;
+			$insertLuong['employeeid'] = $item->employeeid;
+			$insertLuong['branchid'] = $branchid;
+			$insertLuong['salary'] = $tienLuongSauKhiCong;
+			$insertLuong['salary_real'] = $tienLuongSauKhiCong - round($tt_workers);
+			$insertLuong['datecreate'] = $date;
+			$insertLuong['usercreate'] = $username;
+			$this->model->table($tb['hre_salary_public'])->insert($insertLuong);
+			
 		}	
 		$this->db->trans_complete(); 
 		if ($this->db->trans_status() === FALSE) {
