@@ -78,6 +78,7 @@ class base_model extends CI_Model {
 		$arrTable['hre_timesheets_month'] = 'hre_timesheets_month_'.$companyid;
 		$arrTable['hre_taxpersonal'] = 'hre_taxpersonal_'.$companyid;
 		$arrTable['hre_salary_public'] = 'hre_salary_public_'.$companyid;
+		$arrTable['hre_salary_insurance'] = 'hre_salary_insurance_'.$companyid;
 		return $arrTable;
 	}
 	function getListTable($fromdate,$todate){
